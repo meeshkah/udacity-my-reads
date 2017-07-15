@@ -27,7 +27,9 @@ class SearchBooks extends Component {
 
     if (query) {
       const match = new RegExp(escapeRegExp(query), 'i');
-      showingBooks = books.filter((book) => match.test(book.title));
+      showingBooks = books.filter((book) => (match.test(book.title) || 
+                                             match.test(book.authors) 
+                                            ));
     } else {
       showingBooks = books;
     }
@@ -51,7 +53,7 @@ class SearchBooks extends Component {
               <li key={book.id}>
                 <Book
                   title={book.title}
-                  author={book.author}
+                  authors={book.authors}
                   imageUrl={book.imageLinks.smallThumbnail}
                   shelves={this.props.shelves}
                 />
