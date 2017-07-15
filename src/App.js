@@ -4,6 +4,7 @@ import * as BooksAPI from './BooksAPI';
 import './App.css';
 
 import Book from './Book';
+import SearchBooks from './SearchBooks';
 
 class BooksApp extends React.Component {
   state = {}
@@ -174,17 +175,9 @@ class BooksApp extends React.Component {
         <Route 
           path="/search" 
           render={(history) => (
-            <div className="search-books">
-              <div className="search-books-bar">
-                <Link className="close-search" to="/">Close</Link>
-                <div className="search-books-input-wrapper">
-                  <input type="text" placeholder="Search by title or author"/>
-                </div>
-              </div>
-              <div className="search-books-results">
-                <ol className="books-grid"></ol>
-              </div>
-            </div>
+            <SearchBooks 
+              shelves={shelves}
+            />
           )}
         />
       </div>
