@@ -23,6 +23,7 @@ class SearchBooks extends Component {
 
   render() {
     const { query, books } = this.state;
+    const { shelves, onAddBook, booksInLibrary} = this.props;
     let showingBooks;
 
     if (query) {
@@ -49,16 +50,23 @@ class SearchBooks extends Component {
         </div>
         <div className="search-books-results">
           <ol className="books-grid">
-            {showingBooks.map((book) => (
-              <li key={book.id}>
-                <Book
-                  title={book.title}
-                  authors={book.authors}
-                  imageUrl={book.imageLinks.smallThumbnail}
-                  shelves={this.props.shelves}
-                />
-              </li>
-            ))}
+            {showingBooks.map((book) => {
+              const bookInLibrary = booksInLibrary.find(b => b.id === book.id);
+              return (
+                <li key={book.id}>
+                  <Book
+                    title={book.title}
+                    authors={book.authors}
+                    imageUrl={book.imageLinks.smallThumbnail}
+                    shelves={shelves}
+                    currentShelf={bookInLibrary && bookInLibrary.shelf}
+                    onUpdateShelf={(shelfId) => {
+                      onAddBook(book, shelfId);
+                    }}
+                  />
+                </li>
+              )
+            })}
           </ol>
         </div>
       </div>
