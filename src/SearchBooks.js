@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
 
-import Book from './Book';
+import BooksGrid from './BooksGrid';
 
 class SearchBooks extends Component {
   state = {
@@ -12,6 +12,10 @@ class SearchBooks extends Component {
 
   updateQuery = (query) => {
     this.setState({ query });
+  }
+
+  getBooks(query) {
+    BooksAPI.search(query).then((books) => books.length > 0 && this.setState({ books }));
   }
 
   render() {
@@ -25,11 +29,9 @@ class SearchBooks extends Component {
           <div className="search-books-input-wrapper">
             <form onSubmit={(event) => {
               event.preventDefault();
-              BooksAPI.search(query).then((books) => {
-                this.setState({ books });
-              });
+              this.getBooks(query);
             }}>
-              <input 
+              <input
                 type="search"
                 placeholder="Search by title or author"
                 value={query}
@@ -39,25 +41,19 @@ class SearchBooks extends Component {
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid">
-            {books.length > 0 && (books.map((book) => {
+          <BooksGrid
+            books={books.map((book) => {
               const bookInLibrary = booksInLibrary.find(b => b.id === book.id);
-              return (
-                <li key={book.id}>
-                  <Book
-                    title={book.title}
-                    authors={book.authors}
-                    imageUrl={book.imageLinks.smallThumbnail}
-                    shelves={shelves}
-                    currentShelf={bookInLibrary && bookInLibrary.shelf}
-                    onUpdateShelf={(shelfId) => {
-                      onAddBook(book, shelfId);
-                    }}
-                  />
-                </li>
-              )
-            }))}
-          </ol>
+              if (bookInLibrary) {
+                book.shelf = bookInLibrary.shelf;
+              } else {
+                book.shelf = '';
+              }
+              return book;
+            })}
+            shelves={shelves}
+            onUpdateShelf={(book, shelfId) => onAddBook(book, shelfId)}
+          />
         </div>
       </div>
     );

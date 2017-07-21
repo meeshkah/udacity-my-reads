@@ -1,8 +1,9 @@
 import React from 'react';
 import { Route, Link } from 'react-router-dom';
 import './App.css';
+import * as BooksAPI from './BooksAPI';
 
-import Book from './Book';
+import BooksGrid from './BooksGrid';
 import SearchBooks from './SearchBooks';
 
 const shelves = [
@@ -16,23 +17,32 @@ class BooksApp extends React.Component {
     books: [],
   }
 
+  componentDidMount() {
+    BooksAPI.getAll().then((books) => {
+      this.setState({ books });
+    });
+  }
+
   getBooksOnShelf(shelfId) {
     return this.state.books.filter(book => book.shelf === shelfId);
   }
 
   putBookOnShelf(book, shelfId) {
-    this.setState((state) => {
-      const bookToChange = state.books.find(b => b.id === book.id);
-      let updatedBooks;
+    BooksAPI.update(book, shelfId).then((shelves) => {
+      this.setState((state) => {
+        const bookToChange = state.books.find(b => b.id === book.id);
+        let updatedBooks;
 
-      if (bookToChange) {
-        bookToChange.shelf = shelfId;
-        updatedBooks = state.books.filter(b => b.id !== book.id).concat([ bookToChange ]);
-      } else {
-        book.shelf = shelfId;
-        updatedBooks = state.books.concat([ book ]);
-      }
-      return { books: updatedBooks };
+        if (bookToChange) {
+          bookToChange.shelf = shelfId;
+          updatedBooks = state.books.filter(b => b.id !== book.id).concat([ bookToChange ]);
+        } else {
+          book.shelf = shelfId;
+          updatedBooks = state.books.concat([ book ]);
+        }
+
+        return { books: updatedBooks };
+      });
     });
   }
 
@@ -54,22 +64,11 @@ class BooksApp extends React.Component {
                     <h2 className="bookshelf-title">{ shelf.title }</h2>
                     <div className="bookshelf-books">
                       {this.getBooksOnShelf(shelf.id) && this.getBooksOnShelf(shelf.id).length ? (
-                        <ol className="books-grid">
-                          {this.getBooksOnShelf(shelf.id).map((book) => (
-                            <li key={ book.id }>
-                              <Book
-                                title={ book.title }
-                                authors={ book.authors }
-                                imageUrl={book.imageLinks.smallThumbnail}
-                                shelves={shelves}
-                                currentShelf={book.shelf}
-                                onUpdateShelf={(shelfId) => {
-                                  this.putBookOnShelf(book, shelfId);
-                                }}
-                              />
-                            </li>
-                          ))}
-                        </ol>
+                        <BooksGrid
+                          books={this.getBooksOnShelf(shelf.id)}
+                          shelves={shelves}
+                          onUpdateShelf={(book, shelfId) => this.putBookOnShelf(book, shelfId)}
+                        />
                       ) : (
                         <div>This shelf is dusty, add some books to it</div>
                       )}
@@ -89,9 +88,7 @@ class BooksApp extends React.Component {
           render={(history) => (
             <SearchBooks
               shelves={shelves}
-              onAddBook={(book, shelfId) => {
-                this.putBookOnShelf(book, shelfId);
-              }}
+              onAddBook={(book, shelfId) => this.putBookOnShelf(book, shelfId)}
               booksInLibrary={this.state.books}
             />
           )}
