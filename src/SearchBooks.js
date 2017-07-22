@@ -52,6 +52,7 @@ class SearchBooks extends Component {
               return book;
             })}
             shelves={shelves}
+            markBooksInLibrary={true}
             onUpdateShelf={(book, shelfId) => onAddBook(book, shelfId)}
           />
         </div>
