@@ -28,7 +28,7 @@ class Book extends Component {
     const shelves = this.props.shelves.concat({ id: 'none', title: 'None'});
 
     return (
-      <div className={`book ${this.props.className}`}>
+      <div className={`book ${this.props.className ? this.props.className : ''}`}>
         <div className="book-top">
           <div className="book-cover" style={{ width: this.state.dimensions.width, height: this.state.dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}></div>
           <div className="book-shelf-changer">
