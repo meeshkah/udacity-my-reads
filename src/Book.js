@@ -1,17 +1,35 @@
 import React, { Component } from 'react';
 
 class Book extends Component {
-  render() {
-    const dimensions = {
+  state = {
+    dimensions: {
       width: 128,
       height: 193,
-    };
+    }
+  }
+
+  componentDidMount() {
+    const coverImage = new Image();
+    coverImage.src = this.props.imageUrl;
+    coverImage.addEventListener('load', (event) => {
+      if (event.returnValue) {
+        this.setState({ 
+          dimensions: {
+            width: event.path[0].naturalWidth,
+            height: event.path[0].naturalHeight,
+          }
+        });
+      } 
+    });
+  }
+
+  render() {
     const shelves = this.props.shelves.concat({ id: 'none', title: 'None'});
 
     return (
       <div className="book">
         <div className="book-top">
-          <div className="book-cover" style={{ width: dimensions.width, height: dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}></div>
+          <div className="book-cover" style={{ width: this.state.dimensions.width, height: this.state.dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}></div>
           <div className="book-shelf-changer">
             <select
               value={ this.props.currentShelf || 'none' }
