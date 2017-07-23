@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import './Book.css';
 
+import BookShelfChanger from './BookShelfChanger';
+
 class Book extends Component {
   state = {
     dimensions: {
@@ -25,25 +27,19 @@ class Book extends Component {
   }
 
   render() {
-    const shelves = this.props.shelves.concat({ id: 'none', title: 'None'});
-
     return (
-      <div className={`book ${this.props.className ? this.props.className : ''}`}>
+      <div className={`book ${this.props.isInLibrary ? 'is-in-library' : ''}`}>
         <div className="book-top">
-          <div className="book-cover" style={{ width: this.state.dimensions.width, height: this.state.dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}></div>
-          <div className="book-shelf-changer">
-            <select
-              value={ this.props.currentShelf || 'none' }
-              onChange={(event) => this.props.onUpdateShelf(event.target.value) }
-            >
-              <option value="" disabled>Move to...</option>
-              {shelves.map(shelf => (
-                <option key={ shelf.id } value={ shelf.id }>
-                  { shelf.title }
-                </option>
-              ))}
-            </select>
+          <div 
+            className="book-cover" 
+            style={{ width: this.state.dimensions.width, height: this.state.dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}
+          >
           </div>
+          <BookShelfChanger
+            currentShelf={this.props.currentShelf}
+            shelves={this.props.shelves}
+            onUpdateShelf={(shelfId) => this.props.onUpdateShelf(shelfId)}
+          />
         </div>
         <div className="book-title">{ this.props.title }</div>
         <div className="book-authors">

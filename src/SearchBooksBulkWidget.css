@@ -1,0 +1,32 @@
+.search-books-bulk-widget {
+  display: block;
+  position: fixed;
+  left: 50%;
+  bottom: 25px;
+  transform: translateX(-50%);
+  height: 50px;
+  line-height: 50px;
+  padding-left: 1rem;
+  padding-right: 4rem;
+  color: #fff;
+  background-color: #2e7c31;
+  border-radius: 25px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  z-index: 2;
+}
+
+.search-books-bulk-widget .book-shelf-changer {
+  position: absolute;
+  left: auto;
+  right: 5px;
+  bottom: auto;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.search-books-bulk-widget-text a {
+  display: inline-block;
+  padding-left: 1rem;
+  text-decoration: underline;
+  cursor: pointer;
+}

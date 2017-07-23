@@ -9,6 +9,38 @@
 }
 
 .books-grid li {
+  display: flex;
+  position: relative;
   padding: 10px 15px;
   text-align: left;
+}
+
+.books-grid li.is-selected .book-select-display,
+.books-grid li:hover .book-select-display {
+  display: block;
+}
+
+.books-grid li.is-selected .book,
+.books-grid li:hover .book {
+  background-color: rgba(46, 124, 49, .1);
+}
+
+.book-select {
+  display: none;
+}
+
+.book-select-display {
+  display: none;
+  position: absolute;
+  top: 0px;
+  left: 5px;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #2e7c31;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.book-select:checked + .book-select-display {
+  background-color: #2e7c31;
 }

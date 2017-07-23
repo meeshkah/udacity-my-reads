@@ -4,11 +4,13 @@ import { Link } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
 
 import BooksGrid from './BooksGrid';
+import SearchBooksBulkWidget from './SearchBooksBulkWidget';
 
 class SearchBooks extends Component {
   state = {
     query: '',
     books: [],
+    selectedBooks: [],
   }
 
   updateQuery = (query) => {
@@ -19,9 +21,17 @@ class SearchBooks extends Component {
     BooksAPI.search(query).then((books) => books.length > 0 && this.setState({ books }));
   }
 
+  selectBook(book) {
+    this.setState((state) => ({
+      selectedBooks: state.selectedBooks.includes(book) ? 
+                     state.selectedBooks.filter((b) => b.id !== book.id) :
+                     state.selectedBooks.concat([ book ]),
+    }));
+  }
+
   render() {
-    const { query, books } = this.state;
-    const { shelves, onAddBook, booksInLibrary} = this.props;
+    const { query, books, selectedBooks } = this.state;
+    const { shelves, onAddBook, onAddBooks, booksInLibrary} = this.props;
 
     return (
       <div className="search-books">
@@ -41,6 +51,19 @@ class SearchBooks extends Component {
             </form>
           </div>
         </div>
+        {selectedBooks.length > 0 && (
+          <SearchBooksBulkWidget 
+            shelves={shelves}
+            numberOfBooks={selectedBooks.length}
+            onClearFilter={() => this.setState({ selectedBooks: [] })}
+            onUpdateBooks={(shelfId) => {
+              onAddBooks(selectedBooks, shelfId);
+              this.setState({
+                selectedBooks: [],
+              });
+            }}
+          />
+        )}
         <div className="search-books-results">
           <BooksGrid
             books={books.map((book) => {
@@ -52,8 +75,10 @@ class SearchBooks extends Component {
               }
               return book;
             })}
+            selectedBooks={selectedBooks}
             shelves={shelves}
             markBooksInLibrary={true}
+            onSelectBook={(book) => this.selectBook(book)}
             onUpdateShelf={(book, shelfId) => onAddBook(book, shelfId)}
           />
         </div>

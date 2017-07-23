@@ -5,6 +5,7 @@ import * as BooksAPI from './BooksAPI';
 
 import BooksGrid from './BooksGrid';
 import SearchBooks from './SearchBooks';
+import SearchBooksBulkWidget from './SearchBooksBulkWidget';
 
 const shelves = [
   { id: 'currentlyReading', title: 'Currently Reading'},
@@ -15,6 +16,7 @@ const shelves = [
 class BooksApp extends React.Component {
   state = {
     books: [],
+    selectedBooks: [],
   }
 
   componentDidMount() {
@@ -46,7 +48,17 @@ class BooksApp extends React.Component {
     });
   }
 
+  selectBook(book) {
+    this.setState((state) => ({
+      selectedBooks: state.selectedBooks.includes(book) ? 
+                     state.selectedBooks.filter((b) => b.id !== book.id) :
+                     state.selectedBooks.concat([ book ]),
+    }));
+  }
+
   render() {
+    const shelvesWithNone = shelves.concat([{ id: 'none', title: 'None'}]);
+
     return (
       <div className="app">
         <Route
@@ -57,6 +69,19 @@ class BooksApp extends React.Component {
               <div className="list-books-title">
                 <h1>MyReads</h1>
               </div>
+              {this.state.selectedBooks.length > 0 && (
+                <SearchBooksBulkWidget 
+                  shelves={shelvesWithNone}
+                  numberOfBooks={this.state.selectedBooks.length}
+                  onClearFilter={() => this.setState({ selectedBooks: [] })}
+                  onUpdateBooks={(shelfId) => {
+                    this.state.selectedBooks.forEach((book) => this.putBookOnShelf(book, shelfId));
+                    this.setState({
+                      selectedBooks: [],
+                    });
+                  }}
+                />
+              )}
               <div className="list-books-content">
                 <div>
                 {shelves.map((shelf) => (
@@ -66,7 +91,9 @@ class BooksApp extends React.Component {
                       {this.getBooksOnShelf(shelf.id) && this.getBooksOnShelf(shelf.id).length ? (
                         <BooksGrid
                           books={this.getBooksOnShelf(shelf.id)}
-                          shelves={shelves}
+                          shelves={shelvesWithNone}
+                          selectedBooks={this.state.selectedBooks}
+                          onSelectBook={(book) => this.selectBook(book)}
                           onUpdateShelf={(book, shelfId) => this.putBookOnShelf(book, shelfId)}
                         />
                       ) : (
@@ -87,8 +114,11 @@ class BooksApp extends React.Component {
           path="/search"
           render={(history) => (
             <SearchBooks
-              shelves={shelves}
+              shelves={shelvesWithNone}
               onAddBook={(book, shelfId) => this.putBookOnShelf(book, shelfId)}
+              onAddBooks={(books, shelfId) => {
+                books.forEach((book) => this.putBookOnShelf(book, shelfId));
+              }}
               booksInLibrary={this.state.books}
             />
           )}
