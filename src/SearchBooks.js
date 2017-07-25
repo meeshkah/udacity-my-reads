@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './SearchBooks.css';
 import { Link } from 'react-router-dom';
 import * as BooksAPI from './BooksAPI';
@@ -7,6 +8,13 @@ import BooksGrid from './BooksGrid';
 import SearchBooksBulkWidget from './SearchBooksBulkWidget';
 
 class SearchBooks extends Component {
+  static PropTypes = {
+    shelves: PropTypes.array.isRequired,
+    onAddBook: PropTypes.func.isRequired,
+    onAddBooks: PropTypes.func.isRequired,
+    booksInLibrary: PropTypes.array,
+  }
+
   state = {
     query: '',
     books: [],

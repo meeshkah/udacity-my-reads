@@ -1,50 +1,57 @@
-import React, { Component } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import './BooksGrid.css';
 import Book from './Book';
 
-class BooksGrid extends Component {
-  render() {
-    return (
-      <ol className="books-grid">
-        {this.props.books.length > 0 && this.props.books.map((book) => (
-          <li 
-            key={ book.id }
-            className={this.props.selectedBooks.includes(book) ? 'is-selected' : ''}
-          >
+const BooksGrid = (props) => {
+  return (
+    <ol className="books-grid">
+      {props.books.length > 0 && props.books.map((book) => (
+        <li 
+          key={ book.id }
+          className={props.selectedBooks.includes(book) ? 'is-selected' : ''}
+        >
 
-            <label htmlFor={ book.id }>
-              <input
-                id={ book.id }
-                className="book-select"
-                type="checkbox"
-                onChange={(event) => {
-                  this.props.onSelectBook(book);
-                }}
-                checked={this.props.selectedBooks && 
-                         this.props.selectedBooks.includes(book)}
-              />
-              <span className="book-select-display"></span>
-            </label>
-            <Book
-              title={ book.title }
-              authors={ book.authors }
-              imageUrl={book.imageLinks.smallThumbnail}
-              isInLibrary={
-                this.props.markBooksInLibrary &&
-                book.shelf &&
-                book.shelf !== 'none'}
-              isSelected={this.props.selectedBooks.includes(book)}
-              shelves={this.props.shelves}
-              currentShelf={book.shelf}
-              onUpdateShelf={(shelfId) => {
-                this.props.onUpdateShelf(book, shelfId);
+          <label htmlFor={ book.id }>
+            <input
+              id={ book.id }
+              className="book-select"
+              type="checkbox"
+              onChange={(event) => {
+                props.onSelectBook(book);
               }}
+              checked={props.selectedBooks && 
+                       props.selectedBooks.includes(book)}
             />
-          </li>
-        ))}
-      </ol>
-    );
-  }
+            <span className="book-select-display"></span>
+          </label>
+          <Book
+            title={book.title}
+            authors={book.authors}
+            imageUrl={book.imageLinks.smallThumbnail}
+            isInLibrary={
+              props.markBooksInLibrary &&
+              book.shelf &&
+              book.shelf !== 'none'}
+            isSelected={props.selectedBooks.includes(book)}
+            shelves={props.shelves}
+            currentShelf={book.shelf}
+            onUpdateShelf={(shelfId) => {
+              props.onUpdateShelf(book, shelfId);
+            }}
+          />
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+BooksGrid.PropTypes = {
+  books: PropTypes.array.isRequired,
+  shelves: PropTypes.array.isRequired,
+  selectedBooks: PropTypes.array,
+  onSelectBook: PropTypes.func,
+  onUpdateShelf: PropTypes.func,
 }
 
 export default BooksGrid;

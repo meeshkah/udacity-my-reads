@@ -1,9 +1,21 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './Book.css';
 
 import BookShelfChanger from './BookShelfChanger';
 
 class Book extends Component {
+  static PropTypes = {
+    title: PropTypes.string.isRequired,
+    authors: PropTypes.arrayOf(PropTypes.string).isRequired,
+    imageUrl: PropTypes.string.isRequired,
+    shelves: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onUpdateShelf: PropTypes.func.isRequired,
+    isInLibrary: PropTypes.bool,
+    isSelected: PropTypes.bool,
+    currentShelf: PropTypes.bool,
+  }
+
   state = {
     dimensions: {
       width: 128,

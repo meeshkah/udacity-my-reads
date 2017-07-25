@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import './SearchBooksBulkWidget.css';
 
 const SearchBooksBulkWidget = (props) => {
@@ -23,6 +24,13 @@ const SearchBooksBulkWidget = (props) => {
       </div>
     </div>
   );
+}
+
+SearchBooksBulkWidget.PropTypes = {
+  shelves: PropTypes.array.isRequired,
+  onClearFilter: PropTypes.func.isRequired,
+  onUpdateBooks: PropTypes.func.isRequired,
+  numberOfBooks: PropTypes.number,
 }
 
 export default SearchBooksBulkWidget;
