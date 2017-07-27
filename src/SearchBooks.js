@@ -8,11 +8,11 @@ import BooksGrid from './BooksGrid';
 import SearchBooksBulkWidget from './SearchBooksBulkWidget';
 
 class SearchBooks extends Component {
-  static PropTypes = {
-    shelves: PropTypes.array.isRequired,
+  static propTypes = {
+    shelves: PropTypes.arrayOf(PropTypes.object).isRequired,
     onAddBook: PropTypes.func.isRequired,
     onAddBooks: PropTypes.func.isRequired,
-    booksInLibrary: PropTypes.array,
+    booksInLibrary: PropTypes.arrayOf(PropTypes.object),
   }
 
   state = {
@@ -31,7 +31,7 @@ class SearchBooks extends Component {
 
   selectBook(book) {
     this.setState((state) => ({
-      selectedBooks: state.selectedBooks.includes(book) ? 
+      selectedBooks: state.selectedBooks.includes(book) ?
                      state.selectedBooks.filter((b) => b.id !== book.id) :
                      state.selectedBooks.concat([ book ]),
     }));
@@ -60,7 +60,7 @@ class SearchBooks extends Component {
           </div>
         </div>
         {selectedBooks.length > 0 && (
-          <SearchBooksBulkWidget 
+          <SearchBooksBulkWidget
             shelves={shelves}
             numberOfBooks={selectedBooks.length}
             onClearFilter={() => this.setState({ selectedBooks: [] })}

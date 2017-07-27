@@ -5,15 +5,15 @@ import './Book.css';
 import BookShelfChanger from './BookShelfChanger';
 
 class Book extends Component {
-  static PropTypes = {
+  static propTypes = {
     title: PropTypes.string.isRequired,
     authors: PropTypes.arrayOf(PropTypes.string).isRequired,
     imageUrl: PropTypes.string.isRequired,
-    shelves: PropTypes.arrayOf(PropTypes.string).isRequired,
+    shelves: PropTypes.arrayOf(PropTypes.object).isRequired,
     onUpdateShelf: PropTypes.func.isRequired,
     isInLibrary: PropTypes.bool,
     isSelected: PropTypes.bool,
-    currentShelf: PropTypes.bool,
+    currentShelf: PropTypes.string,
   }
 
   state = {
@@ -28,13 +28,13 @@ class Book extends Component {
     coverImage.src = this.props.imageUrl;
     coverImage.addEventListener('load', (event) => {
       if (event.returnValue) {
-        this.setState({ 
+        this.setState({
           dimensions: {
             width: event.path[0].naturalWidth,
             height: event.path[0].naturalHeight,
           }
         });
-      } 
+      }
     });
   }
 
@@ -42,8 +42,8 @@ class Book extends Component {
     return (
       <div className={`book ${this.props.isInLibrary ? 'is-in-library' : ''}`}>
         <div className="book-top">
-          <div 
-            className="book-cover" 
+          <div
+            className="book-cover"
             style={{ width: this.state.dimensions.width, height: this.state.dimensions.height, backgroundImage: `url("${ this.props.imageUrl }")` }}
           >
           </div>

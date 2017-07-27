@@ -26,8 +26,8 @@ const SearchBooksBulkWidget = (props) => {
   );
 }
 
-SearchBooksBulkWidget.PropTypes = {
-  shelves: PropTypes.array.isRequired,
+SearchBooksBulkWidget.propTypes = {
+  shelves: PropTypes.arrayOf(PropTypes.object).isRequired,
   onClearFilter: PropTypes.func.isRequired,
   onUpdateBooks: PropTypes.func.isRequired,
   numberOfBooks: PropTypes.number,

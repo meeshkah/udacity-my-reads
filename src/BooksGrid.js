@@ -7,20 +7,20 @@ const BooksGrid = (props) => {
   return (
     <ol className="books-grid">
       {props.books.length > 0 && props.books.map((book) => (
-        <li 
+        <li
           key={ book.id }
           className={props.selectedBooks.includes(book) ? 'is-selected' : ''}
         >
 
-          <label htmlFor={ book.id }>
+          <label htmlFor={book.id}>
             <input
-              id={ book.id }
+              id={book.id}
               className="book-select"
               type="checkbox"
               onChange={(event) => {
                 props.onSelectBook(book);
               }}
-              checked={props.selectedBooks && 
+              checked={props.selectedBooks &&
                        props.selectedBooks.includes(book)}
             />
             <span className="book-select-display"></span>
@@ -30,9 +30,8 @@ const BooksGrid = (props) => {
             authors={book.authors}
             imageUrl={book.imageLinks.smallThumbnail}
             isInLibrary={
-              props.markBooksInLibrary &&
-              book.shelf &&
-              book.shelf !== 'none'}
+              !!(props.markBooksInLibrary && book.shelf && book.shelf !== 'none')
+            }
             isSelected={props.selectedBooks.includes(book)}
             shelves={props.shelves}
             currentShelf={book.shelf}
@@ -46,10 +45,10 @@ const BooksGrid = (props) => {
   );
 }
 
-BooksGrid.PropTypes = {
-  books: PropTypes.array.isRequired,
-  shelves: PropTypes.array.isRequired,
-  selectedBooks: PropTypes.array,
+BooksGrid.propTypes = {
+  books: PropTypes.arrayOf(PropTypes.object).isRequired,
+  shelves: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedBooks: PropTypes.arrayOf(PropTypes.object),
   onSelectBook: PropTypes.func,
   onUpdateShelf: PropTypes.func,
 }
