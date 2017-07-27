@@ -18,8 +18,8 @@ class Book extends Component {
 
   state = {
     dimensions: {
-      width: 128,
-      height: 193,
+      width: 135,
+      height: 200,
     }
   }
 
@@ -28,10 +28,22 @@ class Book extends Component {
     coverImage.src = this.props.imageUrl;
     coverImage.addEventListener('load', (event) => {
       if (event.returnValue) {
-        this.setState({
-          dimensions: {
-            width: event.path[0].naturalWidth,
-            height: event.path[0].naturalHeight,
+        this.setState((state) => {
+          if (state.dimensions.height / state.dimensions.width >
+              event.path[0].naturalHeight / event.path[0].naturalWidth) {
+            return {
+              dimensions: {
+                width: state.dimensions.width,
+                height: event.path[0].naturalHeight * state.dimensions.width / event.path[0].naturalWidth,
+              }
+            }
+          } else {
+            return {
+              dimensions: {
+                width: event.path[0].naturalWidth * state.dimensions.height / event.path[0].naturalHeight,
+                height: state.dimensions.height,
+              }
+            }
           }
         });
       }
